@@ -14,4 +14,13 @@ public class BTreeNode {
 	public boolean isLeaf() {
 		return children[0] == null;
 	}
+	
+	public Pair search(int target) {
+		int index = 0;
+		while (index < numKeys) {
+			if (target <= keys[index]) break;
+			index++;
+		}
+	}
 }
+
