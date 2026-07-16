@@ -27,7 +27,7 @@ public class BTreeNode {
 			if (value < keys[i]) break;
 			i++;
 		}
-		shiftRight(i);
+		shiftRightKeys(i);
 		keys[i] = value;
 		
 		numKeys++;
@@ -43,16 +43,16 @@ public class BTreeNode {
 		return Arrays.toString(v);
 	}
 	
-	private void shiftRight(int index) {
-		for (int i = 1; i >= index; i--) {
-			swapKeys(i, i + 1);
+	public void shiftRightChildren(int index) {
+		for (int i = numKeys - 1; i >= index; i--) {
+			children[i + 1] = children[i];
 		}
 	}
 	
-	private void swapKeys(int index1, int index2) {
-		int aux = keys[index1];
-		keys[index1] = keys[index2];
-		keys[index2] = aux;
+	public void shiftRightKeys(int index) {
+		for (int i = numKeys - 1; i >= index; i--) {
+			keys[i + 1] = keys[i];
+		}
 	}
 }
 
