@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import "./NavBar.css"
 import graphIcon from '../../assets/icon/graph-icon.png';
 
@@ -9,8 +10,8 @@ function NavBar() {
             <span>B-Tree Visualizer</span>
 
             <ul className="ul-navbar">
-                <li><a href="/about">About</a></li>
-                <li><a href="/">Home</a></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/">Home</Link></li>
             </ul>
         </nav>
     )

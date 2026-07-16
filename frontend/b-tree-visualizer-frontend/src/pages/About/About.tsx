@@ -6,7 +6,7 @@ import "./About.css";
 function About() {
   return (
     <Layout>
-      <div className="about-container">
+      <div className="about-container fade-in">
         <h1>B-Tree Visualizer</h1>
         <p>
           O B-Tree Visualizer é uma ferramenta web com o objetivo de visualizar
