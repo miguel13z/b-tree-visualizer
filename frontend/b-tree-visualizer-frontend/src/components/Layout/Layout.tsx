@@ -11,7 +11,7 @@ function Layout({ children }: LayoutProps) {
         <>
         <NavBar />
 
-        <main>
+        <main className="main-content">
             {children}
         </main>
 

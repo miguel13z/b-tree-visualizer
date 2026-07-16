@@ -9,7 +9,7 @@ function NavBar() {
             <span>B-Tree Visualizer</span>
 
             <ul className="ul-navbar">
-                <li><a href="/">About</a></li>
+                <li><a href="/about">About</a></li>
                 <li><a href="/">Home</a></li>
             </ul>
         </nav>
