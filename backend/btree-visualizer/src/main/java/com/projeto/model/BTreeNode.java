@@ -44,7 +44,7 @@ public class BTreeNode {
 	}
 	
 	public void shiftRightChildren(int index) {
-		for (int i = numKeys - 1; i >= index; i--) {
+		for (int i = numKeys; i >= index; i--) {
 			children[i + 1] = children[i];
 		}
 	}

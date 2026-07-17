@@ -20,19 +20,42 @@ public class BTree {
 	public void add(int value) {
 		if (isEmpty()) {
 			BTreeNode newNode = new BTreeNode();
-			newNode.keys[0] = value;
+			newNode.insert(value);
 			root = newNode;
 			size++;
+			
+			return;
 		} 
+		
+		size++;
 		if (root.isFull()) {
 			BTreeNode newRoot = new BTreeNode();
 			newRoot.children[0] = root;
+			splitChild(newRoot, 0, root);
+			insertNode(newRoot, value);
 			root = newRoot;
 		} else {
-			
+			insertNode(root, value);
 		}
 	}
 	
+	
+	@Override
+	public String toString() {
+		if (isEmpty()) return "vazia";
+		StringBuilder sb = new StringBuilder();
+		toStringCurrentNode(root, sb);
+		return sb.substring(0, sb.length() - 2).toString();
+	}
+	
+	private void toStringCurrentNode(BTreeNode current, StringBuilder sb) {
+		sb.append(current.toString() + ", ");
+		if (current.isLeaf()) return;
+		for (int i = 0; i <= current.numKeys; i++) {
+			toStringCurrentNode(current.children[i], sb);
+		}
+	}
+
 	private void insertNode(BTreeNode node, int value) {
 		if (node.isLeaf()) {
 			node.insert(value);
@@ -47,7 +70,9 @@ public class BTree {
 		
 		BTreeNode childrenNode = node.children[i];
 		if (childrenNode.isFull()) {
-			
+			splitChild(node, i, childrenNode);
+			if (value > node.keys[i]) i++;
+			insertNode(node.children[i], value);
 		} else {
 			insertNode(childrenNode, value);
 		}
@@ -55,13 +80,13 @@ public class BTree {
 	
 	private void splitChild(BTreeNode parent, int index, BTreeNode fullChild) {
 		BTreeNode newNode = new BTreeNode();
-		for (int i = (fullChild.numKeys / 2) + 1; i >= fullChild.numKeys - 1; i++) {
+		for (int i = (fullChild.numKeys / 2) + 1; i < fullChild.numKeys; i++) {
 			newNode.insert(fullChild.keys[i]);
 		}
 		
 		if (!fullChild.isLeaf()) {
 			int j = 0;
-			for (int i = (fullChild.children.length / 2); i < fullChild.children.length - 1; i++) {
+			for (int i = (fullChild.numKeys - 1) / 2 + 1; i <= fullChild.numKeys; i++) {
 				newNode.children[j] = fullChild.children[i];
 				j++;
 			}
@@ -70,7 +95,12 @@ public class BTree {
 		parent.shiftRightChildren(index + 1);
 		parent.children[index + 1] = newNode;
 		
+		parent.shiftRightKeys(index);
+		parent.keys[index] = fullChild.keys[(fullChild.numKeys - 1) / 2];
 		
+		newNode.numKeys = fullChild.numKeys - (fullChild.numKeys - 1) / 2 - 1;
+		fullChild.numKeys = (fullChild.numKeys - 1) / 2;
+		parent.numKeys += 1;
 	}
 
 }
