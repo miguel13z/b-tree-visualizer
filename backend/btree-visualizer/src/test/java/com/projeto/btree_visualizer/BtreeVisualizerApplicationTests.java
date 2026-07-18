@@ -85,7 +85,7 @@ class BtreeVisualizerApplicationTests {
 	@Test
 	void btreeVazia() {
 		BTree tree = new BTree();
-		assertEquals("vazia", tree.toString());
+		assertEquals("[]", tree.toString());
 		assertEquals(0 , tree.getSize());
 		assertTrue(tree.isEmpty());
 	}
@@ -142,5 +142,75 @@ class BtreeVisualizerApplicationTests {
 		assertEquals("[40], [20], [10], [30], [60, 80], [50], [70], [90, 100]", tree.toString());
 		assertEquals(10 , tree.getSize());
 		assertTrue(!tree.isEmpty());
+	}
+	
+	@Test
+	void btreeInicializadaSemValor() {
+		BTree tree = new BTree(new int[] {});
+		assertEquals("[]", tree.toString());
+	}
+	
+	@Test
+	void btreeInicializadaValorUnico() {
+		BTree tree = new BTree(new int[] {1});
+		assertEquals( "[1]", tree.toString());
+	}
+	
+	@Test
+	void btreeInicializadaDecrescente() {
+		BTree tree = new BTree(new int[] {10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0});
+		assertEquals("[7], [3, 5], [0, 1, 2], [4], [6], [9], [8], [10]", tree.toString());
+	}
+	
+	@Test
+	void btreeInicializadaCrescente() {
+		BTree tree = new BTree(new int[] {10, 20, 30, 40, 50, 60, 70, 80, 90, 100});
+		assertEquals("[40], [20], [10], [30], [60, 80], [50], [70], [90, 100]", tree.toString());
+	}
+	
+	@Test
+	void btreeBuscaSemElemento() {
+		BTree tree = new BTree();
+		assertEquals(null, tree.search(13));
+		assertTrue(tree.isEmpty());
+	}
+	
+	@Test
+	void btreeBuscaComRaizCheia() {
+		BTree tree = new BTree();
+		tree.add(13);
+		tree.add(40);
+		tree.add(60);
+		assertEquals(null, tree.search(-100));
+		assertEquals(0, tree.search(13).index);
+		assertEquals(1, tree.search(40).index);
+		assertEquals(2, tree.search(60).index);
+	}
+	
+	@Test
+	void btreeDoisNiveis() {
+		BTree tree = new BTree(new int[] {10, 20, 30, 40, 50, 60, 70, 80});
+		assertEquals(2, tree.search(60).index);
+		assertEquals(0, tree.search(70).index);
+		assertEquals(1, tree.search(80).index);
+	}
+	
+	@Test
+	void btreeTresNiveis() {
+		BTree tree = new BTree(new int[] {84, 99, 27, 80, 47, 62, 56, 10, 11, 74, 87, 91, 17, 14, 13});
+		
+		assertEquals(0, tree.search(62).index);
+		assertEquals(0, tree.search(11).index);
+		assertEquals(0, tree.search(13).index);
+		assertEquals(0, tree.search(74).index);
+		assertEquals(0, tree.search(87).index);
+		
+		assertEquals(1, tree.search(17).index);
+		assertEquals(1, tree.search(14).index);
+		assertEquals(1, tree.search(80).index);
+		assertEquals(1, tree.search(91).index);
+		
+		assertEquals(2, tree.search(47).index);
+		assertEquals(2, tree.search(99).index);
 	}
 }

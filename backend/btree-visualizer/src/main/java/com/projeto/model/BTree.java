@@ -9,6 +9,15 @@ public class BTree {
 		this.size = 0;
 	}
 	
+	public BTree(int[] v) {
+		this.root = null;
+		this.size = 0;
+		
+		for (int value : v) {
+			add(value);
+		}
+	}
+	
 	public boolean isEmpty() {
 		return size == 0;
 	}
@@ -39,10 +48,26 @@ public class BTree {
 		}
 	}
 	
+	public Pair search(int target) {
+		if (isEmpty()) return null;
+		return search(target, root);
+	}
+	
+	private Pair search(int target, BTreeNode current) {
+		int i = 0;
+		while (i < current.numKeys) {
+			if (target <= current.keys[i]) break;
+			i++;
+		}
+		
+		if (i < current.numKeys && current.keys[i] == target) return new Pair(current, i);
+		if (current.isLeaf()) return null;
+		return search(target, current.children[i]);
+	}
 	
 	@Override
 	public String toString() {
-		if (isEmpty()) return "vazia";
+		if (isEmpty()) return "[]";
 		StringBuilder sb = new StringBuilder();
 		toStringCurrentNode(root, sb);
 		return sb.substring(0, sb.length() - 2).toString();

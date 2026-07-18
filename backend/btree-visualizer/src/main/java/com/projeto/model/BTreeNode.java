@@ -13,6 +13,12 @@ public class BTreeNode {
 		this.numKeys = 0;
 	}
 	
+	public BTreeNode(int[] v) {
+		this.keys = new int[3];
+		this.children = new BTreeNode[4];
+		this.numKeys = 0;
+	}
+	
 	public boolean isFull() {
 		return numKeys == 3;
 	}
