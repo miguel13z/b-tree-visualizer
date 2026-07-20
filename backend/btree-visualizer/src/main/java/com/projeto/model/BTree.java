@@ -53,6 +53,32 @@ public class BTree {
 		return search(target, root);
 	}
 	
+	public void remove(int target) {
+		if (isEmpty()) return;
+		
+		Pair pair = search(target, root);
+		if (pair == null) return;
+		
+		BTreeNode node = pair.node;
+		int index = pair.index;
+		if (node.isLeaf()) {
+			node.remove(index);
+			size--;
+		} else {
+			
+		}
+	}
+	
+	private int getPredecessor(BTreeNode node, int index) {
+		BTreeNode left = node.children[index];
+		return getMax(left);
+	}
+	
+	private int getMax(BTreeNode node) {
+		if (node.isLeaf()) return node.keys[node.numKeys - 1];
+		else return getMax(node.children[node.numKeys]);
+	}
+
 	private Pair search(int target, BTreeNode current) {
 		int i = 0;
 		while (i < current.numKeys) {

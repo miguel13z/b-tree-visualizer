@@ -213,4 +213,125 @@ class BtreeVisualizerApplicationTests {
 		assertEquals(2, tree.search(47).index);
 		assertEquals(2, tree.search(99).index);
 	}
+	
+	@Test
+	void btreeNodeRemocaoUmElemento() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.remove(0);
+		assertTrue(!node.isFull());
+		assertTrue(node.isEmpty());
+		assertEquals("[]", node.toString());
+	}
+	
+	@Test
+	void btreeNodeRemocaoDoisElementos() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.insert(20);
+		node.remove(0);
+		
+		assertTrue(!node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[20]", node.toString());
+	}
+	
+	@Test
+	void btreeNodeRemocaoUltimoElemento() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.insert(20);
+		node.insert(30);
+		node.remove(2);
+		
+		assertTrue(!node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[10, 20]", node.toString());
+	}
+	
+	@Test
+	void btreeNodeRemocaoPrimeiroElemento() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.insert(20);
+		node.insert(30);
+		node.remove(0);
+		
+		assertTrue(!node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[20, 30]", node.toString());
+	}
+	
+	@Test
+	void btreeNodeRemocaoElementoCentral() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.insert(20);
+		node.insert(30);
+		node.remove(1);
+		
+		assertTrue(!node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[10, 30]", node.toString());
+	}
+	
+	@Test
+	void btreeNodeRemocaoSeguidaDaAdicao() {
+		BTreeNode node = new BTreeNode();
+		node.insert(10);
+		node.insert(20);
+		node.insert(30);
+		node.remove(1);
+		
+		assertTrue(!node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[10, 30]", node.toString());
+		
+		node.insert(15);
+		assertTrue(node.isFull());
+		assertTrue(!node.isEmpty());
+		assertEquals("[10, 15, 30]", node.toString());
+	}
+	
+	@Test
+	void btreeRemoveEmArvoreVazia() {
+		BTree tree = new BTree();
+		assertTrue(tree.isEmpty());
+		assertEquals("[]", tree.toString());
+		tree.remove(20);
+		assertTrue(tree.isEmpty());
+		assertEquals("[]", tree.toString());
+	}
+	
+	@Test
+	void btreeRemoveElementoInexistente() {
+		BTree tree = new BTree(new int[] {84, 99, 27, 80, 47, 62, 56, 10, 11, 74, 87, 91, 17, 14, 13});
+		assertTrue(!tree.isEmpty());
+		assertEquals(15, tree.getSize());
+		assertEquals("[62], [11, 17, 47], [10], [13, 14], [27], [56], [84], [74, 80], [87, 91, 99]", tree.toString());
+		tree.remove(20);
+		assertTrue(!tree.isEmpty());
+		assertEquals(15, tree.getSize());
+		assertEquals("[62], [11, 17, 47], [10], [13, 14], [27], [56], [84], [74, 80], [87, 91, 99]", tree.toString());
+	}
+	
+	@Test
+	void btreeRemoveElementoFolha() {
+		BTree tree = new BTree(new int[] {84, 99, 27});
+		assertEquals(3, tree.getSize());
+		assertEquals("[27, 84, 99]", tree.toString());
+		
+		tree.remove(84);
+		assertEquals(2, tree.getSize());
+		assertEquals("[27, 99]", tree.toString());
+		
+		tree.remove(27);
+		assertEquals(1, tree.getSize());
+		assertEquals("[99]", tree.toString());
+		
+		tree.remove(99);
+		assertEquals(0, tree.getSize());
+		assertEquals("[]", tree.toString());
+		assertTrue(tree.isEmpty());
+	}
 }

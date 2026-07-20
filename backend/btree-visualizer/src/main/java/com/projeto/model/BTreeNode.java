@@ -23,6 +23,10 @@ public class BTreeNode {
 		return numKeys == 3;
 	}
 	
+	public boolean isEmpty() {
+		return numKeys == 0;
+	}
+	
 	public boolean isLeaf() {
 		return children[0] == null;
 	}
@@ -39,8 +43,22 @@ public class BTreeNode {
 		numKeys++;
 	}
 	
+	public void remove(int index) {
+		if (index < 0 || index >= numKeys) throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
+		
+		if (index + 1 != numKeys) {
+			for (int i = index + 1; i < numKeys; i++) {
+				keys[i - 1] = keys[i];
+			}
+		}
+		
+		numKeys--;
+	}
+	
 	@Override
 	public String toString() {
+		if (isEmpty()) return "[]";
+		
 		int[] v = new int[numKeys];
 		for (int i = 0; i < numKeys; i++) {
 			v[i] = keys[i];
