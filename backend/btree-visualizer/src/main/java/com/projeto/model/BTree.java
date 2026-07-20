@@ -55,14 +55,15 @@ public class BTree {
 	
 	public void remove(int target) {
 		if (isEmpty()) return;
+		BTreeNode node = search(target, root).node;
+		if (node == null) return;
 		
-		Pair pair = search(target, root);
-		if (pair == null) return;
-		
-		BTreeNode node = pair.node;
-		int index = pair.index;
-		if (node.isLeaf()) {
-			node.remove(index);
+		removeNode(node, target);
+	}
+	
+	private void removeNode(BTreeNode current, int target) {
+		if (current.isLeaf()) {
+			current.remove(target);
 			size--;
 		} else {
 			

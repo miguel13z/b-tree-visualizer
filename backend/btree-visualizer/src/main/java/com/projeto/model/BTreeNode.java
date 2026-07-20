@@ -43,16 +43,17 @@ public class BTreeNode {
 		numKeys++;
 	}
 	
-	public void remove(int index) {
-		if (index < 0 || index >= numKeys) throw new IndexOutOfBoundsException("Index " + index + " is out of bounds.");
-		
-		if (index + 1 != numKeys) {
-			for (int i = index + 1; i < numKeys; i++) {
-				keys[i - 1] = keys[i];
+	public void remove(int target) {
+		int index = -1;
+		for (int i = 0; i < numKeys; i++) {
+			if (keys[i] == target) {
+				index = i;
+				shiftLeftKeys(index);
+				break;
 			}
 		}
 		
-		numKeys--;
+		if (index != -1) numKeys--;
 	}
 	
 	@Override
@@ -76,6 +77,12 @@ public class BTreeNode {
 	public void shiftRightKeys(int index) {
 		for (int i = numKeys - 1; i >= index; i--) {
 			keys[i + 1] = keys[i];
+		}
+	}
+	
+	private void shiftLeftKeys(int index) {
+		for (int i = index + 1; i < numKeys; i++) {
+			keys[i - 1] = keys[i];
 		}
 	}
 }
