@@ -30,7 +30,7 @@ public class BTreeNode {
 	public boolean isLeaf() {
 		return children[0] == null;
 	}
-
+	
 	public void insert(int value) {
 		int i = 0;
 		while (i < numKeys) {
@@ -43,7 +43,13 @@ public class BTreeNode {
 		numKeys++;
 	}
 	
-	public void remove(int target) {
+	public void removeIndex(int index) {
+		if (index < 0 || index >= numKeys) throw new IndexOutOfBoundsException("Index inválido.");
+		shiftLeftKeys(index);
+		numKeys--;
+	}
+	
+	public void removeValue(int target) {
 		int index = -1;
 		for (int i = 0; i < numKeys; i++) {
 			if (keys[i] == target) {
@@ -54,6 +60,16 @@ public class BTreeNode {
 		}
 		
 		if (index != -1) numKeys--;
+	}
+	
+	public int indexOf(int target) {
+		int i = 0;
+		while (i < numKeys) {
+			if (keys[i] == target) return i;
+			i++;
+		}
+		
+		return -1;
 	}
 	
 	@Override
@@ -80,9 +96,15 @@ public class BTreeNode {
 		}
 	}
 	
-	private void shiftLeftKeys(int index) {
+	public void shiftLeftKeys(int index) {
 		for (int i = index + 1; i < numKeys; i++) {
 			keys[i - 1] = keys[i];
+		}
+	}
+	
+	public void shiftLeftChildren(int index) {
+		for (int i = index + 1; i < numKeys - 1; i++) {
+			children[i - 1] = children[i];
 		}
 	}
 }

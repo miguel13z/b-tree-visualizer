@@ -55,21 +55,69 @@ public class BTree {
 	
 	public void remove(int target) {
 		if (isEmpty()) return;
-		BTreeNode node = search(target, root).node;
-		if (node == null) return;
-		
-		removeNode(node, target);
+		removeNode(root, target);
 	}
 	
 	private void removeNode(BTreeNode current, int target) {
-		if (current.isLeaf()) {
-			current.remove(target);
-			size--;
-		} else {
-			
+		int index = current.indexOf(target);
+		if (index != -1) {
+			if (current.isLeaf()) {
+				current.removeIndex(index);
+				size--;
+			} else {
+				int predecessor = getPredecessor(current, index);
+				current.keys[index] = predecessor;
+				removeNode(current.children[index], predecessor);
+				if (current.children[index].isEmpty()) {
+					fixUnderflow(current, index);
+				}
+			}
+			return;
 		}
+		
+		if (current.isLeaf()) return;
+		
+		index = 0;
+		while (index < current.numKeys) {
+			if (target <= current.keys[index]) break;
+			index++;
+		}
+		removeNode(current.children[index], target);
 	}
 	
+	private void fixUnderflow(BTreeNode parent, int childIndex) {
+		if (childIndex > 0 && !parent.children[childIndex].isEmpty()) {
+			borrowFromLeft(parent, childIndex);
+			return;
+		}
+		if (childIndex < parent.numKeys && !parent.children[childIndex].isEmpty()) {
+			//borrowFromRight();
+			return;
+		}
+		//merge();
+	}
+	
+	private void borrowFromLeft(BTreeNode parent, int childIndex) {
+		BTreeNode childNode = parent.children[childIndex];
+		childNode.shiftRightKeys(0);
+		if (!childNode.isLeaf()) {
+			childNode.shiftRightChildren(0);
+		}
+		
+		childNode.keys[0] = parent.keys[childIndex - 1];
+		
+		BTreeNode leftBrother = parent.children[childIndex - 1];
+		int lastKey = leftBrother.keys[leftBrother.numKeys - 1];
+		parent.keys[childIndex - 1] = lastKey;
+		
+		if (!childNode.isLeaf()) {
+			childNode.children[0] = leftBrother.children[leftBrother.numKeys];
+		}
+		
+		leftBrother.numKeys -= 1;
+		childNode.numKeys += 1;
+	}
+
 	private int getPredecessor(BTreeNode node, int index) {
 		BTreeNode left = node.children[index];
 		return getMax(left);
