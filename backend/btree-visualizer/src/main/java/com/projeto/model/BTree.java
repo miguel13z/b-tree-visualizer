@@ -91,12 +91,19 @@ public class BTree {
 			return;
 		}
 		if (childIndex < parent.numKeys && !parent.children[childIndex].isEmpty()) {
-			//borrowFromRight();
+			borrowFromRight(parent, childIndex);
 			return;
 		}
 		//merge();
 	}
 	
+	private void borrowFromRight(BTreeNode parent, int childIndex) {
+		BTreeNode childNode = parent.children[childIndex];
+		childNode.keys[childNode.numKeys - 1] = parent.keys[childIndex];
+		
+		BTreeNode rightBrother = parent.children[childIndex + 1];
+	}
+
 	private void borrowFromLeft(BTreeNode parent, int childIndex) {
 		BTreeNode childNode = parent.children[childIndex];
 		childNode.shiftRightKeys(0);
@@ -126,6 +133,11 @@ public class BTree {
 	private int getMax(BTreeNode node) {
 		if (node.isLeaf()) return node.keys[node.numKeys - 1];
 		else return getMax(node.children[node.numKeys]);
+	}
+	
+	private int getMin(BTreeNode node) {
+		if (node.isLeaf()) return node.keys[0];
+		else return getMin(node.children[0]);
 	}
 
 	private Pair search(int target, BTreeNode current) {
