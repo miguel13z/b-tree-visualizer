@@ -103,7 +103,7 @@ public class BTreeNode {
 	}
 	
 	public void shiftLeftChildren(int index) {
-		for (int i = index + 1; i < numKeys - 1; i++) {
+		for (int i = index + 1; i <= numKeys; i++) {
 			children[i - 1] = children[i];
 		}
 	}

@@ -56,6 +56,10 @@ public class BTree {
 	public void remove(int target) {
 		if (isEmpty()) return;
 		removeNode(root, target);
+		
+		if (root.numKeys == 0 && !root.isLeaf()) {
+	        root = root.children[0];
+	    }
 	}
 	
 	private void removeNode(BTreeNode current, int target) {
@@ -83,22 +87,48 @@ public class BTree {
 			index++;
 		}
 		removeNode(current.children[index], target);
+		
+		if (current.children[index].isEmpty()) {
+            fixUnderflow(current, index);
+        }
 	}
 	
 	private void fixUnderflow(BTreeNode parent, int childIndex) {
-		if (childIndex > 0 && !parent.children[childIndex].isEmpty()) {
+		if (childIndex > 0 && parent.children[childIndex - 1].numKeys > 1) {
 			borrowFromLeft(parent, childIndex);
 			return;
 		}
-		if (childIndex < parent.numKeys && !parent.children[childIndex].isEmpty()) {
+		if (childIndex < parent.numKeys && parent.children[childIndex + 1].numKeys > 1) {
 			borrowFromRight(parent, childIndex);
 			return;
 		}
-		merge(parent, childIndex);
+		if (childIndex == parent.numKeys) {
+	        merge(parent, childIndex - 1);
+	    } else {
+	        merge(parent, childIndex);
+	    }
 	}
 	
 	private void merge(BTreeNode parent, int childIndex) {
+		BTreeNode leftBrother = parent.children[childIndex];
+		leftBrother.keys[leftBrother.numKeys] = parent.keys[childIndex];
 		
+		BTreeNode rightBrother = parent.children[childIndex + 1];
+		for (int i = 0; i < rightBrother.numKeys; i++) {
+			leftBrother.keys[leftBrother.numKeys + 1 + i] = rightBrother.keys[i];
+		}
+		
+		if (!rightBrother.isLeaf()) {
+			for (int i  = 0; i < rightBrother.numKeys + 1; i++) {
+				leftBrother.children[leftBrother.numKeys + 1 + i] = rightBrother.children[i];
+			}
+		}
+		
+		parent.shiftLeftKeys(childIndex);
+		parent.shiftLeftChildren(childIndex + 1);
+		
+		leftBrother.numKeys += rightBrother.numKeys + 1;
+		parent.numKeys -= 1;
 	}
 
 	private void borrowFromRight(BTreeNode parent, int childIndex) {
