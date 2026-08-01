@@ -1,22 +1,25 @@
 package com.projeto.model;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class BTreeNode {
 	public int[] keys;
 	public BTreeNode[] children;
 	public int numKeys;
+	public String id;
 	
 	public BTreeNode() {
 		this.keys = new int[3];
 		this.children = new BTreeNode[4];
 		this.numKeys = 0;
+		this.id = UUID.randomUUID().toString();
 	}
 	
 	public BTreeNode(int[] v) {
 		this.keys = new int[3];
 		this.children = new BTreeNode[4];
 		this.numKeys = 0;
+		this.id = UUID.randomUUID().toString();
 	}
 	
 	public boolean isFull() {
@@ -106,6 +109,24 @@ public class BTreeNode {
 		for (int i = index + 1; i <= numKeys; i++) {
 			children[i - 1] = children[i];
 		}
+	}
+	
+	public BTreeNode clone() {
+		BTreeNode clone = new BTreeNode();
+		clone.numKeys = numKeys;
+		clone.id = id;
+		
+		for (int i = 0; i < numKeys; i++) {
+			clone.keys[i] = keys[i];
+		}
+		
+		if (!isLeaf()) {
+			for (int i = 0; i <= numKeys; i++) {
+				clone.children[i] = children[i].clone();
+			}
+		}
+		
+		return clone;
 	}
 }
 

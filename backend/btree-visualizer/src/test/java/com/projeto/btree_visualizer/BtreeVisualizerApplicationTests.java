@@ -218,7 +218,7 @@ class BtreeVisualizerApplicationTests {
 	void btreeNodeRemocaoUmElemento() {
 		BTreeNode node = new BTreeNode();
 		node.insert(10);
-		node.remove(0);
+		node.removeIndex(0);
 		assertTrue(!node.isFull());
 		assertTrue(node.isEmpty());
 		assertEquals("[]", node.toString());
@@ -229,7 +229,7 @@ class BtreeVisualizerApplicationTests {
 		BTreeNode node = new BTreeNode();
 		node.insert(10);
 		node.insert(20);
-		node.remove(0);
+		node.removeIndex(0);
 		
 		assertTrue(!node.isFull());
 		assertTrue(!node.isEmpty());
@@ -242,7 +242,7 @@ class BtreeVisualizerApplicationTests {
 		node.insert(10);
 		node.insert(20);
 		node.insert(30);
-		node.remove(2);
+		node.removeIndex(2);
 		
 		assertTrue(!node.isFull());
 		assertTrue(!node.isEmpty());
@@ -255,7 +255,7 @@ class BtreeVisualizerApplicationTests {
 		node.insert(10);
 		node.insert(20);
 		node.insert(30);
-		node.remove(0);
+		node.removeIndex(0);
 		
 		assertTrue(!node.isFull());
 		assertTrue(!node.isEmpty());
@@ -268,7 +268,7 @@ class BtreeVisualizerApplicationTests {
 		node.insert(10);
 		node.insert(20);
 		node.insert(30);
-		node.remove(1);
+		node.removeIndex(1);
 		
 		assertTrue(!node.isFull());
 		assertTrue(!node.isEmpty());
@@ -281,7 +281,7 @@ class BtreeVisualizerApplicationTests {
 		node.insert(10);
 		node.insert(20);
 		node.insert(30);
-		node.remove(1);
+		node.removeIndex(1);
 		
 		assertTrue(!node.isFull());
 		assertTrue(!node.isEmpty());

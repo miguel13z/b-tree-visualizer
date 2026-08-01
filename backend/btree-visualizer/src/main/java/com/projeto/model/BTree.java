@@ -1,5 +1,7 @@
 package com.projeto.model;
 
+import java.util.*;
+
 public class BTree {
 	private BTreeNode root;
 	private int size;
@@ -48,9 +50,10 @@ public class BTree {
 		}
 	}
 	
-	public Pair search(int target) {
-		if (isEmpty()) return null;
-		return search(target, root);
+	public List<Frame> search(int target) {
+		List<Frame> frames = new ArrayList<>();
+		if (isEmpty()) return frames;
+		return search(target, root, frames);
 	}
 	
 	public void remove(int target) {
@@ -181,16 +184,24 @@ public class BTree {
 		else return getMax(node.children[node.numKeys]);
 	}
 
-	private Pair search(int target, BTreeNode current) {
+	private List<Frame> search(int target, BTreeNode current, List<Frame> frames) {
 		int i = 0;
 		while (i < current.numKeys) {
+			frames.add(new Frame(root, current.id, i, "SEARCHING", "Comparing " + target + " with key " + current.keys[i]));
 			if (target <= current.keys[i]) break;
 			i++;
 		}
 		
-		if (i < current.numKeys && current.keys[i] == target) return new Pair(current, i);
-		if (current.isLeaf()) return null;
-		return search(target, current.children[i]);
+		if (i < current.numKeys && current.keys[i] == target) {
+			frames.add(new Frame(root, current.id, i, "FOUND", "Key " + target + " found in this node"));
+			return frames;
+		}
+		if (current.isLeaf()) {
+			frames.add(new Frame(root, current.id, -1, "NOT_FOUND", "Key " + target + " does not exist in the tree"));
+			return frames;
+		}
+		frames.add(new Frame(root, current.id, -1, "DESCENDING", "Descending to the child node"));
+		return search(target, current.children[i], frames);
 	}
 	
 	@Override
